@@ -1,17 +1,17 @@
-import type { ReactNode } from 'react'
-import Navbar from './Navbar'
+import type { ReactNode } from "react"
+import Navbar from "./Navbar"
 
-type Props = {
+interface Props {
   children: ReactNode
 }
 
 export default function MainLayout({ children }: Props) {
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div style={{ padding: '20px' }}>
+      <main className="max-w-7xl mx-auto px-6 py-12">
         {children}
-      </div>
-    </>
+      </main>
+    </div>
   )
 }
