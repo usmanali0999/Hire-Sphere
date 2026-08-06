@@ -1,12 +1,13 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import MainLayout from '../../components/layout/MainLayout'
-import Home from '../../pages/Home/Home'
-import Jobs from '../../pages/Jobs/Jobs'
-import Login from '../../pages/Login/Login'
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import MainLayout from "@/components/layout/MainLayout"
+import Home from "@/pages/Home/Home"
+import Jobs from "@/pages/Jobs/Jobs"
+import Login from "@/pages/Login/Login"
+import JobDetails from "@/pages/JobDetails/JobDetails"
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: (
       <MainLayout>
         <Home />
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/jobs',
+    path: "/jobs",
     element: (
       <MainLayout>
         <Jobs />
@@ -22,7 +23,15 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/login',
+    path: "/jobs/:id",
+    element: (
+      <MainLayout>
+        <JobDetails />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/login",
     element: (
       <MainLayout>
         <Login />

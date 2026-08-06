@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import type { Job } from "@/types/job"
 import Button from "@/components/ui/Button"
 
@@ -21,9 +22,11 @@ export default function JobCard({ job }: Props) {
           {job.salary}
         </span>
 
-        <Button variant="outline">
-          View Details
-        </Button>
+        <Link to={`/jobs/${job.id}`}>
+          <Button variant="outline">
+            View Details
+          </Button>
+        </Link>
       </div>
 
       <p className="text-sm text-gray-400 mt-2">

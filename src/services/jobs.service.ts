@@ -1,4 +1,12 @@
 import type { Job } from "@/types/job"
+import { api } from "@/lib/api"
+
+/*
+  NOTE:
+  Currently we are mocking data.
+  When backend is ready, replace mock with:
+  return api.get("/jobs")
+*/
 
 const mockJobs: Job[] = [
   {
@@ -30,8 +38,24 @@ const mockJobs: Job[] = [
   },
 ]
 
-export function getJobs(): Promise<Job[]> {
+export async function getJobs(): Promise<Job[]> {
+  // Future:
+  // const response = await api.get<Job[]>("/jobs")
+  // return response.data
+
   return new Promise((resolve) => {
     setTimeout(() => resolve(mockJobs), 500)
+  })
+}
+
+export async function getJobById(id: string): Promise<Job | undefined> {
+  // Future:
+  // const response = await api.get<Job>(`/jobs/${id}`)
+  // return response.data
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockJobs.find((job) => job.id === id))
+    }, 500)
   })
 }
