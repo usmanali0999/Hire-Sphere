@@ -1,21 +1,17 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { getJobs } from "@/services/jobs.service"
 import type { Job } from "@/types/job"
 import JobCard from "@/features/jobs/JobCard"
 
 export default function Jobs() {
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [loading, setLoading] = useState(true)
-
   const [search, setSearch] = useState("")
   const [typeFilter, setTypeFilter] = useState("All")
 
-  useEffect(() => {
-    getJobs().then((data) => {
-      setJobs(data)
-      setLoading(false)
-    })
-  }, [])
+  const { data: jobs = [], isLoading, isError } = useQuery<Job[]>({
+    queryKey: ["jobs"],
+    queryFn: getJobs,
+  })
 
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) => {
@@ -30,7 +26,8 @@ export default function Jobs() {
     })
   }, [jobs, search, typeFilter])
 
-  if (loading) return <p>Loading jobs...</p>
+  if (isLoading) return <p>Loading jobs...</p>
+  if (isError) return <p>Something went wrong.</p>
 
   return (
     <div>
@@ -56,7 +53,6 @@ export default function Jobs() {
         </select>
       </div>
 
-      {/* Jobs Grid */}
       {filteredJobs.length === 0 ? (
         <p>No jobs found.</p>
       ) : (

@@ -1,26 +1,20 @@
-import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { useQuery } from "@tanstack/react-query"
 import { getJobById } from "@/services/jobs.service"
 import type { Job } from "@/types/job"
 import Button from "@/components/ui/Button"
 
 export default function JobDetails() {
   const { id } = useParams()
-  const [job, setJob] = useState<Job | null>(null)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (id) {
-      getJobById(id).then((data) => {
-        setJob(data ?? null)
-        setLoading(false)
-      })
-    }
-  }, [id])
+  const { data: job, isLoading, isError } = useQuery<Job | undefined>({
+    queryKey: ["job", id],
+    queryFn: () => getJobById(id!),
+    enabled: !!id,
+  })
 
-  if (loading) return <p>Loading job...</p>
-
-  if (!job) return <p>Job not found.</p>
+  if (isLoading) return <p>Loading job...</p>
+  if (isError || !job) return <p>Job not found.</p>
 
   return (
     <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow">
