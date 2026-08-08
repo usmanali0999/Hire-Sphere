@@ -2,9 +2,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getJobs, deleteJob } from "@/services/jobs.service"
 import type { Job } from "@/types/job"
 import Button from "@/components/ui/Button"
+import { useUIStore } from "@/store/ui.store"
 
 export default function DashboardJobs() {
   const queryClient = useQueryClient()
+  const showToast = useUIStore((s) => s.showToast)
+  const setLoading = useUIStore((s) => s.setLoading)
 
   const { data: jobs = [] } = useQuery({
     queryKey: ["jobs"],
@@ -13,8 +16,34 @@ export default function DashboardJobs() {
 
   const deleteMutation = useMutation({
     mutationFn: deleteJob,
+
+    onMutate: async (id: string) => {
+      setLoading(true)
+
+      await queryClient.cancelQueries({ queryKey: ["jobs"] })
+
+      const previousJobs = queryClient.getQueryData<Job[]>(["jobs"])
+
+      queryClient.setQueryData<Job[]>(["jobs"], (old = []) =>
+        old.filter((job) => job.id !== id)
+      )
+
+      return { previousJobs }
+    },
+
+    onError: (_err, _id, context) => {
+      if (context?.previousJobs) {
+        queryClient.setQueryData(["jobs"], context.previousJobs)
+      }
+      showToast("Delete failed")
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobs"] })
+      showToast("Job deleted")
+    },
+
+    onSettled: () => {
+      setLoading(false)
     },
   })
 

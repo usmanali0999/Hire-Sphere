@@ -1,9 +1,8 @@
 import type { Job } from "@/types/job"
-import { api } from "@/lib/api"
 
 /*
-  NOTE:
   Mock data for frontend simulation.
+  In production this will use real API calls.
 */
 
 const mockJobs: Job[] = [
@@ -36,12 +35,11 @@ const mockJobs: Job[] = [
   },
 ]
 
-// Local mutable copy (simulate database)
 let jobs: Job[] = [...mockJobs]
 
 export async function getJobs(): Promise<Job[]> {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(jobs), 500)
+    setTimeout(() => resolve(jobs), 400)
   })
 }
 
@@ -49,7 +47,7 @@ export async function getJobById(id: string): Promise<Job | undefined> {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(jobs.find((job) => job.id === id))
-    }, 500)
+    }, 400)
   })
 }
 
