@@ -3,9 +3,7 @@ import { api } from "@/lib/api"
 
 /*
   NOTE:
-  Currently we are mocking data.
-  When backend is ready, replace mock with:
-  return api.get("/jobs")
+  Mock data for frontend simulation.
 */
 
 const mockJobs: Job[] = [
@@ -38,24 +36,29 @@ const mockJobs: Job[] = [
   },
 ]
 
-export async function getJobs(): Promise<Job[]> {
-  // Future:
-  // const response = await api.get<Job[]>("/jobs")
-  // return response.data
+// Local mutable copy (simulate database)
+let jobs: Job[] = [...mockJobs]
 
+export async function getJobs(): Promise<Job[]> {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(mockJobs), 500)
+    setTimeout(() => resolve(jobs), 500)
   })
 }
 
 export async function getJobById(id: string): Promise<Job | undefined> {
-  // Future:
-  // const response = await api.get<Job>(`/jobs/${id}`)
-  // return response.data
-
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(mockJobs.find((job) => job.id === id))
+      resolve(jobs.find((job) => job.id === id))
     }, 500)
   })
+}
+
+export async function createJob(job: Job): Promise<Job> {
+  jobs.push(job)
+  return job
+}
+
+export async function deleteJob(id: string): Promise<string> {
+  jobs = jobs.filter((j) => j.id !== id)
+  return id
 }
